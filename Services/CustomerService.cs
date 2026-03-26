@@ -32,7 +32,7 @@ public class CustomerService(ICustomerRepository customerRepository, ICustomerCl
         { 
             CustomerId = customer.CustomerId,
             Name = customer.CustomerName,
-            TotalStandToWin = customer.TotalStandToWin
+            TotalStandToWin = (decimal) customer.TotalStandToWin,
         };
     }
 }

@@ -59,7 +59,7 @@ app.MapGet("/customer/{customerId}/stats",
         async (ICustomerService service, int customerId) =>
         {
             if (customerId <= 0)
-                return Results.BadRequest(new { message = "customerId must be a positive integer."});
+                return Results.BadRequest(new { message = "customerId must be greater than 0."});
             
             //Can be improved to use Mediatr pattern 
             var resp = await service.GetCustomerStat(customerId);

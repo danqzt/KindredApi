@@ -4,5 +4,5 @@ public record CustomerDto
 {
     public int CustomerId { get; init; }
     public string? Name { get; set; }
-    public double TotalStandToWin { get; set; }
+    public decimal TotalStandToWin { get; set; }
 }

@@ -26,5 +26,9 @@ transforming raw data into Domain Events (FixtureEvent, BetPlacedEvent). The Cus
   - Robust error handling and logging (using Serilog)
   - Error handling and event retry can be implemented using persistent queues
   - Unit tests for the domain model and event handlers
+  - Persisting event store to document store
+  - Persisting aggregate state to a database
+  - Create Projections to expose aggregate state to the API
+  - Use Mediatr and CQRS in the API Layer
 
 
