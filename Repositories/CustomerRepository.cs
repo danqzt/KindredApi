@@ -1,4 +1,4 @@
-using KindredApi.Models;
+using KindredApi.Models.Domain;
 using KindredApi.Models.Events;
 
 namespace KindredApi.Repositories;
@@ -6,7 +6,7 @@ namespace KindredApi.Repositories;
 public interface ICustomerRepository
 {
     CustomerAggregate? GetCustomer(int customerId);
-    bool BetPlaced(BetsPlacedEvent @event);
+    bool BetPlaced(BetPlacedEvent @event);
     public void SetCustomerName(int customerId, string name);
 }
 public class CustomerRepository : ICustomerRepository
@@ -19,7 +19,7 @@ public class CustomerRepository : ICustomerRepository
         return customer;
     }
 
-    public bool BetPlaced(BetsPlacedEvent @event)
+    public bool BetPlaced(BetPlacedEvent @event)
     {
         var customer = GetCustomer(@event.CustomerId);
         if (customer == null)

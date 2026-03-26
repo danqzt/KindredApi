@@ -1,6 +1,6 @@
 using KindredApi.Models.Events;
 
-namespace KindredApi.Models;
+namespace KindredApi.Models.Domain;
 
 public class CustomerAggregate
 {
@@ -11,14 +11,14 @@ public class CustomerAggregate
     public double TotalStake { get; private set; }
     public double TotalStandToWin { get; private set; }
 
-    public void Apply(BetsPlacedEvent @event)
+    public void Apply(BetPlacedEvent @event)
     {
         TotalStake += @event.Stake;
         TotalPayout += @event.Stake * @event.Odds;
         TotalStandToWin += @event.Stake * @event.Odds - @event.Stake;
     }
     
-    public static CustomerAggregate New(BetsPlacedEvent @event)
+    public static CustomerAggregate New(BetPlacedEvent @event)
     {
         var newCustomer = new CustomerAggregate
         {

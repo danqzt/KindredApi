@@ -17,7 +17,7 @@ public class CustomerClient(HttpClient client, IMemoryCache cache, IOptions<Wage
 
     public async Task<CustomerDetailDto?> GetCustomerDetail(int customerId)
     {
-        cache.TryGetValue(CacheKey(customerId), out CustomerDetailDto customerDetail);
+        cache.TryGetValue(CacheKey(customerId), out CustomerDetailDto? customerDetail);
         if (customerDetail == null)
         {
             try
@@ -25,7 +25,11 @@ public class CustomerClient(HttpClient client, IMemoryCache cache, IOptions<Wage
                 var response =
                     await client.GetAsync($"customer?customerId={customerId}&candidateId={Settings.CandidateId}");
 
-                response.EnsureSuccessStatusCode();
+                if (!response.IsSuccessStatusCode)
+                {
+                    var errorContent = await response.Content.ReadAsStringAsync();
+                    throw new HttpRequestException($"Failed to fetch customer detail: {response.StatusCode} - {errorContent}");
+                }
                 var stringValue = await response.Content.ReadAsStringAsync();
                 customerDetail = JsonSerializer.Deserialize<CustomerDetailDto>(stringValue)!;
                 cache.Set(CacheKey(customerId), customerDetail);
@@ -33,6 +37,7 @@ public class CustomerClient(HttpClient client, IMemoryCache cache, IOptions<Wage
             catch(Exception e)
             {
                 logger.LogError($"Error calling customer client: {e.Message}");
+                throw new ApplicationException($"Customer service error: {e.Message}", e);
             }
         }
         return customerDetail;

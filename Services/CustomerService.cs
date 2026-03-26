@@ -5,16 +5,16 @@ namespace KindredApi.Services;
 
 public interface ICustomerService
 {
-    Task<CustomerDto> GetCustomerStat(int customerId);
+    Task<CustomerDto?> GetCustomerStat(int customerId);
 }
 public class CustomerService(ICustomerRepository customerRepository, ICustomerClient client) : ICustomerService
 {
-    public async Task<CustomerDto> GetCustomerStat(int customerId)
+    public async Task<CustomerDto?> GetCustomerStat(int customerId)
     {
         var customer = customerRepository.GetCustomer(customerId);
         if (customer == null)
         {
-            throw new KeyNotFoundException($"Customer with ID {customerId} not found.");
+            return null;
         }
         if (string.IsNullOrWhiteSpace(customer.CustomerName))
         {

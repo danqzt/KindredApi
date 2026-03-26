@@ -5,22 +5,22 @@ namespace KindredApi.Repositories;
 public interface IEventStore
 {
     void SaveEvent<T>(T @event);
-    List<BetsPlacedEvent> BetsPlacedByCustomer(int customerId);
+    List<BetPlacedEvent> BetsPlacedByCustomer(int customerId);
 }
 public class EventStore : IEventStore
 {
-    private List<BetsPlacedEvent> betsPlacedEvents = new List<BetsPlacedEvent>();
-    private List<FixtureEvent> fixtureEvents = new List<FixtureEvent>();
+    private List<BetPlacedEvent> betsPlacedEvents = new();
+    private List<FixtureEvent> fixtureEvents = new();
     
-    public List<BetsPlacedEvent> BetsPlacedByCustomer(int customerId)
+    public List<BetPlacedEvent> BetsPlacedByCustomer(int customerId)
     {
         var events = betsPlacedEvents.Where(e => customerId == e.CustomerId).OrderBy(s => s.Timestamp).ToList();
-        return events.Any() ? events.ToList() : new List<BetsPlacedEvent>();
+        return events.Any() ? events.ToList() : new List<BetPlacedEvent>();
     }
     
     public void SaveEvent<T>(T @event)
     {
-        if (@event is BetsPlacedEvent betsPlacedEvent)
+        if (@event is BetPlacedEvent betsPlacedEvent)
         {
             betsPlacedEvents.Add(betsPlacedEvent);
         }

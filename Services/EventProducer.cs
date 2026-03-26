@@ -26,7 +26,7 @@ public class EventProducer(IWolverineRuntime busRuntime) : IEventProducer
                 @event = message.Payload.Deserialize<FixtureEvent>()!;
                 break;
             case MessageType.BetPlaced:
-                @event = message.Payload.Deserialize<BetsPlacedEvent>()!;
+                @event = message.Payload.Deserialize<BetPlacedEvent>()!;
                 break;
             default:
                 throw new InvalidOperationException($"Unsupported message type: {message.Type}");
