@@ -1,4 +1,19 @@
 @HostAddress = http://localhost:5001
 
 ####
+GET {{HostAddress}}/customer/114580/stats
+
+###
 GET {{HostAddress}}/customer/114583/stats
+
+###
+GET {{HostAddress}}/customer/114571/stats
+
+###
+GET {{HostAddress}}/customer/114574/stats
+
+###
+GET {{HostAddress}}/customer/114575/stats
+
+###
+GET {{HostAddress}}/customer/-25/stats

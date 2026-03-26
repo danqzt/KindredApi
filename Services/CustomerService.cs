@@ -21,10 +21,11 @@ public class CustomerService(ICustomerRepository customerRepository, ICustomerCl
            var detail = await client.GetCustomerDetail(customerId);
            if (detail == null)
            {
+               //throw exception when cannot find customer detail
                throw new KeyNotFoundException($"Customer detail not found for ID {customerId}");
            }
 
-           customer.CustomerName = detail.Name;
+           customerRepository.SetCustomerName(customerId, detail.Name);
         }
         
         return new CustomerDto

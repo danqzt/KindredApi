@@ -25,11 +25,8 @@ public class CustomerClient(HttpClient client, IMemoryCache cache, IOptions<Wage
                 var response =
                     await client.GetAsync($"customer?customerId={customerId}&candidateId={Settings.CandidateId}");
 
-                if (!response.IsSuccessStatusCode)
-                {
-                    var errorContent = await response.Content.ReadAsStringAsync();
-                    throw new HttpRequestException($"Failed to fetch customer detail: {response.StatusCode} - {errorContent}");
-                }
+               response.EnsureSuccessStatusCode();
+               
                 var stringValue = await response.Content.ReadAsStringAsync();
                 customerDetail = JsonSerializer.Deserialize<CustomerDetailDto>(stringValue)!;
                 cache.Set(CacheKey(customerId), customerDetail);

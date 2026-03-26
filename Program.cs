@@ -1,7 +1,6 @@
 using KindredApi.Models;
 using KindredApi.Repositories;
 using KindredApi.Services;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Options;
 using Wolverine;
@@ -59,6 +58,10 @@ app.UseHttpsRedirection();
 app.MapGet("/customer/{customerId}/stats", 
         async (ICustomerService service, int customerId) =>
         {
+            if (customerId <= 0)
+                return Results.BadRequest("customerId must be a positive integer.");
+            
+            //Can be improved to use Mediatr pattern with Wolverine.InvokeAsync
             var resp = await service.GetCustomerStat(customerId);
             if (resp == null) return Results.NotFound(); 
             return Results.Ok(resp);

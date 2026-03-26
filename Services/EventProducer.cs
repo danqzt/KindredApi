@@ -11,11 +11,8 @@ public interface IEventProducer
     Task PublishAsync(BaseMessage message);
 }
 
-/// <summary>
-/// Need to use busRuntime to be injected to singleton hostedservice
-/// </summary>
-/// <param name="busRuntime"></param>
-public class EventProducer(IWolverineRuntime busRuntime) : IEventProducer
+
+public class EventProducer(IServiceScopeFactory scopeFactory) : IEventProducer
 {
     public async Task PublishAsync(BaseMessage message)
     {
@@ -33,7 +30,10 @@ public class EventProducer(IWolverineRuntime busRuntime) : IEventProducer
         }
 
         @event.Timestamp = message.Timestamp;
-        var messageBus = new MessageBus(busRuntime);
-        await messageBus.SendAsync(@event); 
+        
+        //create temporary singleton scope to get message bus
+        using var scope = scopeFactory.CreateScope();
+        var messageBus = scope.ServiceProvider.GetRequiredService<IMessageBus>();
+        await messageBus.PublishAsync(@event); 
     }
 }

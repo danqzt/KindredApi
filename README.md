@@ -16,7 +16,6 @@ transforming raw data into Domain Events (FixtureEvent, BetPlacedEvent). The Cus
 `Domain.CustomerAggregate` is the domain model, it can be built by applying events.
 
 ## What missing from the solution
-  - Data validation of the events
   - Robust error handling and logging
   - Error handling and event retry can be implemented using persistent queues
   - Unit tests for the domain model and event handlers
