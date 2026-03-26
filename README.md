@@ -1,3 +1,10 @@
+## How to run
+
+- Install dotnet 10 SDK
+- open IDE (Rider, VSCode, VS) then run
+- or run `dotnet run`
+- There is a file called `kindred-api.http` that you can used to test the API from the IDE. (Vscode extension: `REST Client`)
+
 ## Architecture
 
 A lightweight Event Sourcing implementation. The system processes a real-time stream of betting data via WebSockets, 
@@ -15,8 +22,9 @@ transforming raw data into Domain Events (FixtureEvent, BetPlacedEvent). The Cus
 
 `Domain.CustomerAggregate` is the domain model, it can be built by applying events.
 
-## What missing from the solution
-  - Robust error handling and logging
+## Suggested Improvements
+  - Robust error handling and logging (using Serilog)
   - Error handling and event retry can be implemented using persistent queues
   - Unit tests for the domain model and event handlers
+
 

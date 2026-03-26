@@ -38,8 +38,11 @@ public class WagerService(IOptions<WageringServiceSettings> config, IEventProduc
                 //disconnect from the server
                 await _client.CloseAsync(WebSocketCloseStatus.NormalClosure, "End of feed", ct);
             }
-            //publish the event to the event bus (Currently implemented using wolverine)
-            await eventProducer.PublishAsync(baseMessage!);
+            else
+            {
+                //publish the event to the event bus (Currently implemented using wolverine)
+                await eventProducer.PublishAsync(baseMessage!);
+            }
         }
     }
 
