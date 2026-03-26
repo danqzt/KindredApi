@@ -59,9 +59,9 @@ app.MapGet("/customer/{customerId}/stats",
         async (ICustomerService service, int customerId) =>
         {
             if (customerId <= 0)
-                return Results.BadRequest("customerId must be a positive integer.");
+                return Results.BadRequest(new { message = "customerId must be a positive integer."});
             
-            //Can be improved to use Mediatr pattern with Wolverine.InvokeAsync
+            //Can be improved to use Mediatr pattern 
             var resp = await service.GetCustomerStat(customerId);
             if (resp == null) return Results.NotFound(); 
             return Results.Ok(resp);
