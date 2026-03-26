@@ -3,6 +3,7 @@
 - Install dotnet 10 SDK
 - open IDE (Rider, VSCode, VS) then run
 - or run `dotnet run`
+- You can run the API `http://localhost:5001/customer/{customerId}/stats` OR
 - There is a file called `kindred-api.http` that you can used to test the API from the IDE. (Vscode extension: `REST Client`)
 
 ## Architecture
