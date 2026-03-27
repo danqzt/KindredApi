@@ -7,9 +7,9 @@ public class CustomerAggregate
     public int CustomerId { get; init; }
     
     public string CustomerName { get; set; }
-    public double TotalPayout { get; private set; }
-    public double TotalStake { get; private set; }
-    public double TotalStandToWin { get; private set; }
+    public decimal TotalPayout { get; private set; }
+    public decimal TotalStake { get; private set; }
+    public decimal TotalStandToWin { get; private set; }
 
     public void Apply(BetPlacedEvent @event)
     {
