@@ -12,7 +12,7 @@ public interface IEventProducer
 }
 
 
-public class EventProducer(IServiceScopeFactory scopeFactory) : IEventProducer
+public class EventProducer(IServiceScopeFactory scopeFactory, ILogger<EventProducer> logger) : IEventProducer
 {
     public async Task PublishAsync(BaseMessage message)
     {
@@ -26,7 +26,8 @@ public class EventProducer(IServiceScopeFactory scopeFactory) : IEventProducer
                 @event = message.Payload.Deserialize<BetPlacedEvent>()!;
                 break;
             default:
-                throw new InvalidOperationException($"Unsupported message type: {message.Type}");
+                logger.LogWarning($"Unsupported message type: {message.Type}");
+                return;
         }
 
         @event.Timestamp = message.Timestamp;
