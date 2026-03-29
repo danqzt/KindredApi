@@ -30,6 +30,9 @@ transforming raw data into Domain Events (FixtureEvent, BetPlacedEvent). The Cus
   - Persisting event store to document store
   - Persisting aggregate state to a database
   - Create Projections to expose aggregate state to the API
-  - Use Mediatr and CQRS in the API Layer
+  - Use Mediator and CQRS Pattern in the API Layer (using Wolverine `InvoceAsync` method)
+
+### Summary
+Overall the solution is following SOLID Principle as each components has single responsibility, and the abstraction allows to each component be tested individually. And replaced with different implementation
 
 
