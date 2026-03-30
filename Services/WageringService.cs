@@ -30,9 +30,8 @@ public class WagerService(IOptions<WageringServiceSettings> config, IEventProduc
                 // stop consuming
                 break;
             }
-
-            var baseMessageJson = Encoding.UTF8.GetString(buffer, 0, result.Count);
-            var baseMessage = JsonSerializer.Deserialize<BaseMessage>(baseMessageJson);
+            var messageSpan = buffer.AsSpan(0, result.Count);
+            var baseMessage = JsonSerializer.Deserialize<BaseMessage>(messageSpan);
             if (baseMessage.Type == MessageType.EndofFeed)
             {
                 //disconnect from the server
