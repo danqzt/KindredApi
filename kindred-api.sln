@@ -2,7 +2,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.2.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "kindred-api", "KindredApi.csproj", "{E60AFC87-FA0E-0DB2-3C3D-EBD383B5AFF0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StatsApi", "StatsApi\KindredApi.csproj", "{E60AFC87-FA0E-0DB2-3C3D-EBD383B5AFF0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Server", "Server\Server.csproj", "{201BB62B-3EBD-4E1E-9BBF-32328CC3E592}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -14,6 +16,10 @@ Global
 		{E60AFC87-FA0E-0DB2-3C3D-EBD383B5AFF0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E60AFC87-FA0E-0DB2-3C3D-EBD383B5AFF0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E60AFC87-FA0E-0DB2-3C3D-EBD383B5AFF0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{201BB62B-3EBD-4E1E-9BBF-32328CC3E592}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{201BB62B-3EBD-4E1E-9BBF-32328CC3E592}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{201BB62B-3EBD-4E1E-9BBF-32328CC3E592}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{201BB62B-3EBD-4E1E-9BBF-32328CC3E592}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
