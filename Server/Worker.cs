@@ -12,7 +12,7 @@ public class Worker(IProducer<string, string> producer, BaseMessage[] messages) 
     {
         foreach (var message in messages)
         {
-            Thread.Sleep(75);
+            await Task.Delay(75, ct);
             var json = JsonSerializer.Serialize(message);
             var result = await producer.ProduceAsync(Topic, new Message<string, string>
             {

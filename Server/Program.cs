@@ -79,7 +79,7 @@ app.Map("/ws", async (HttpContext context, BaseMessage[] messages, ILogger<Progr
         var ct = linkedCts.Token;
         foreach (var message in messages)
         {
-            Thread.Sleep(100);
+            await Task.Delay(100, ct);
             var json = JsonSerializer.Serialize(message);
             var buffer = Encoding.UTF8.GetBytes(json);
             await webSocket.SendAsync(new ArraySegment<byte>(buffer), WebSocketMessageType.Text, true, ct);
