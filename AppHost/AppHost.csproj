@@ -1,4 +1,4 @@
-<Project Sdk="Aspire.AppHost.Sdk/13.1.0">
+<Project Sdk="Aspire.AppHost.Sdk/13.2.1">
 
     <PropertyGroup>
         <OutputType>Exe</OutputType>
@@ -11,6 +11,10 @@
     <ItemGroup>
       <ProjectReference Include="..\Server\Server.csproj" />
       <ProjectReference Include="..\StatsApi\KindredApi.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Aspire.Hosting.Kafka" Version="13.2.1" />
     </ItemGroup>
 
 </Project>

@@ -1,3 +1,4 @@
+using Common.Extensions;
 using System.Net.WebSockets;
 using System.Text;
 using System.Text.Json;
@@ -5,13 +6,20 @@ using Common.Models;
 using Microsoft.EntityFrameworkCore;
 using Server;
 
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
+var wageringSettings = builder.ConfigureSettings<WageringServiceSettings>();
 builder.Services.AddOpenApi();
+builder.AddServiceDefaults();
+
 builder.Services.AddDbContext<CustomerDbContext>(opt => opt.UseInMemoryDatabase("CustomerDb"));
 builder.Services.AddSingleton(Constants.Events);
+if (wageringSettings.UseKafka)
+{
+    builder.AddKafkaProducer<string, string>("kafka");
+    builder.Services.AddHostedService<Worker>();
+}
 
 var app = builder.Build();
 
@@ -59,11 +67,11 @@ app.Map("/ws", async (HttpContext context, BaseMessage[] messages, ILogger<Progr
     {
         using var webSocket = await context.WebSockets.AcceptWebSocketAsync();
         
-        // 1. Create a timeout source for 3 minutes
+        // 1. Create a timeout source for 10 minutes
         using var timeoutCts = new CancellationTokenSource(TimeSpan.FromMinutes(10));
 
         // 2. Link the timeout with the browser's disconnect signal
-        // This ensures we stop for BOTH: 3 min expiry OR client closing the tab
+        // This ensures we stop for BOTH: 10 min expiry OR client closing the tab
         using var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(
             context.RequestAborted, 
             timeoutCts.Token);

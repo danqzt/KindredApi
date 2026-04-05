@@ -12,4 +12,5 @@ public class Constants
     ];
     
     public static BaseMessage[] Events => JsonSerializer.Deserialize<BaseMessage[]>(File.ReadAllText("events.json"))!;
+    
 }

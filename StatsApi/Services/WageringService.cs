@@ -1,6 +1,5 @@
 using System.Net.WebSockets;
 using System.Text.Json;
-using KindredApi.Models;
 using Common.Models;
 using Microsoft.Extensions.Options;
 
