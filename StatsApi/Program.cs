@@ -14,7 +14,7 @@ builder.Services.AddOpenApi();
 builder.Services.AddHttpClient<ICustomerClient, CustomerClient>((serviceProvider, client) =>
 {
     var settings = serviceProvider.GetRequiredService<IOptions<WageringServiceSettings>>().Value;
-    client.BaseAddress = new Uri($"https://{settings.Host}/");
+    client.BaseAddress = new Uri($"http://{settings.Host}/");
     client.DefaultRequestHeaders.Add("Accept", "application/json");
 });
 builder.Services.AddScoped<ICustomerService, CustomerService>();

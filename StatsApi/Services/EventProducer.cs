@@ -1,8 +1,7 @@
 using System.Text.Json;
 using KindredApi.Models.Events;
-using KindredApi.Models.External;
+using Common.Models;
 using Wolverine;
-using Wolverine.Runtime;
 
 namespace KindredApi.Services;
 

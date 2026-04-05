@@ -1,11 +1,8 @@
 using System.Net.WebSockets;
-using System.Text;
 using System.Text.Json;
 using KindredApi.Models;
-using KindredApi.Models.External;
+using Common.Models;
 using Microsoft.Extensions.Options;
-using Wolverine;
-using Wolverine.Runtime;
 
 namespace KindredApi.Services;
 

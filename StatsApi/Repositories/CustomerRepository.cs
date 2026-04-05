@@ -1,3 +1,4 @@
+using System.Collections.Concurrent;
 using KindredApi.Models.Domain;
 using KindredApi.Models.Events;
 
@@ -11,7 +12,7 @@ public interface ICustomerRepository
 }
 public class CustomerRepository : ICustomerRepository
 {
-    private Dictionary<int, CustomerAggregate> _customers = new();
+    private ConcurrentDictionary<int, CustomerAggregate> _customers = new();
 
     public CustomerAggregate? GetCustomer(int customerId)
     {
@@ -24,7 +25,7 @@ public class CustomerRepository : ICustomerRepository
         var customer = GetCustomer(@event.CustomerId);
         if (customer == null)
         {
-            _customers.Add(@event.CustomerId, CustomerAggregate.New(@event));
+            _customers.GetOrAdd(@event.CustomerId, CustomerAggregate.New(@event));
             return true;
         }
         customer.Apply(@event);

@@ -1,3 +1,4 @@
+using System.Collections.Concurrent;
 using KindredApi.Models.Events;
 
 namespace KindredApi.Repositories;
@@ -9,8 +10,8 @@ public interface IEventStore
 }
 public class EventStore : IEventStore
 {
-    private List<BetPlacedEvent> betsPlacedEvents = new();
-    private List<FixtureEvent> fixtureEvents = new();
+    private ConcurrentBag<BetPlacedEvent> betsPlacedEvents = new();
+    private ConcurrentBag<FixtureEvent> fixtureEvents = new();
     
     public List<BetPlacedEvent> BetsPlacedByCustomer(int customerId)
     {

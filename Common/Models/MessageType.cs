@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace KindredApi.Models.External;
+namespace Common.Models;
 
 [JsonConverter(typeof(JsonStringEnumConverter))]
 public enum MessageType

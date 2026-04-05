@@ -1,10 +1,33 @@
+using System.Net.WebSockets;
+using System.Text;
+using System.Text.Json;
+using Common.Models;
+using Microsoft.EntityFrameworkCore;
+using Server;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
+builder.Services.AddDbContext<CustomerDbContext>(opt => opt.UseInMemoryDatabase("CustomerDb"));
+builder.Services.AddSingleton(Constants.Events);
 
 var app = builder.Build();
+
+// Seed the database with customers from Constants.CUST_IDS
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<CustomerDbContext>();
+    if (!db.Customers.Any())
+    {
+        foreach (var id in Constants.CUST_IDS)
+        {
+            db.Customers.Add(new Customer { Id = id, CustomerName = $"{Faker.Name.First()} {Faker.Name.Last()}" });
+        }
+        db.SaveChanges();
+    }
+}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -12,28 +35,54 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 }
 
-var summaries = new[]
+// Enable WebSockets
+app.UseWebSockets(new()
 {
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
+    KeepAliveInterval = TimeSpan.FromSeconds(120)
+});
 
-app.MapGet("/weatherforecast", () =>
+app.MapGet("/customer", async (int customerId, CustomerDbContext db) =>
+{
+    var customer = await db.Customers.FindAsync(customerId);
+    if (customer == null)
     {
-        var forecast = Enumerable.Range(1, 5).Select(index =>
-                new WeatherForecast
-                (
-                    DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-                    Random.Shared.Next(-20, 55),
-                    summaries[Random.Shared.Next(summaries.Length)]
-                ))
-            .ToArray();
-        return forecast;
-    })
-    .WithName("GetWeatherForecast");
+        return Results.NotFound($"Customer with Id {customerId} not found.");
+    }
+    return Results.Ok(customer);
+})
+.WithName("GetCustomer");
+
+// WebSocket endpoint
+app.Map("/ws", async (HttpContext context, BaseMessage[] messages, ILogger<Program> logger) =>
+{
+    if (context.WebSockets.IsWebSocketRequest)
+    {
+        using var webSocket = await context.WebSockets.AcceptWebSocketAsync();
+        
+        // 1. Create a timeout source for 3 minutes
+        using var timeoutCts = new CancellationTokenSource(TimeSpan.FromMinutes(10));
+
+        // 2. Link the timeout with the browser's disconnect signal
+        // This ensures we stop for BOTH: 3 min expiry OR client closing the tab
+        using var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(
+            context.RequestAborted, 
+            timeoutCts.Token);
+    
+        var ct = linkedCts.Token;
+        foreach (var message in messages)
+        {
+            Thread.Sleep(100);
+            var json = JsonSerializer.Serialize(message);
+            var buffer = Encoding.UTF8.GetBytes(json);
+            await webSocket.SendAsync(new ArraySegment<byte>(buffer), WebSocketMessageType.Text, true, ct);
+        }
+        await webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "Done sending messages", ct);
+        logger.LogInformation("=== WebSocket closed === ");
+    }
+    else
+    {
+        context.Response.StatusCode = 400;
+    }
+});
 
 app.Run();
-
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}
