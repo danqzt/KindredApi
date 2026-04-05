@@ -1,5 +1,5 @@
 using System.Text.Json;
-using KindredApi.Models;
+using Common.Models;
 using KindredApi.Models.External;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Options;

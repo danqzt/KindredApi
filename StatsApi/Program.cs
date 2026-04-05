@@ -1,4 +1,6 @@
-using KindredApi.Models;
+using Common.Extensions;
+using Common.Models;
+using Confluent.Kafka;
 using KindredApi.Repositories;
 using KindredApi.Services;
 using Microsoft.Extensions.Caching.Memory;
@@ -8,13 +10,15 @@ using Wolverine.FluentValidation;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.Configure<WageringServiceSettings>(builder.Configuration.GetSection(nameof(WageringServiceSettings)));
+// Bind WageringServiceSettings from configuration
+var wageringSettings = builder.ConfigureSettings<WageringServiceSettings>();
 
 builder.Services.AddOpenApi();
+builder.AddServiceDefaults();
 builder.Services.AddHttpClient<ICustomerClient, CustomerClient>((serviceProvider, client) =>
 {
     var settings = serviceProvider.GetRequiredService<IOptions<WageringServiceSettings>>().Value;
-    client.BaseAddress = new Uri($"https://{settings.Host}/");
+    client.BaseAddress = new Uri($"http://{settings.Host}/");
     client.DefaultRequestHeaders.Add("Accept", "application/json");
 });
 builder.Services.AddScoped<ICustomerService, CustomerService>();
@@ -22,7 +26,21 @@ builder.Services.AddSingleton<IEventProducer, EventProducer>();
 builder.Services.AddSingleton<IEventStore, EventStore>();
 builder.Services.AddSingleton<ICustomerRepository, CustomerRepository>();
 builder.Services.AddSingleton<IMemoryCache, MemoryCache>();
-builder.Services.AddHostedService<WagerService>();
+if (wageringSettings.UseKafka)
+{
+    builder.AddKafkaConsumer<string, string>("kafka", opt =>
+    {
+        opt.Config.GroupId = "bets-consumer-group";
+        opt.Config.AutoOffsetReset = AutoOffsetReset.Earliest;
+        opt.Config.EnableAutoCommit = false;
+        opt.Config.AllowAutoCreateTopics = true;
+    });
+    builder.Services.AddHostedService<Worker>();
+}
+else
+{
+    builder.Services.AddHostedService<WagerService>();   
+}
 
 builder.Host.UseWolverine(opts =>
 {

@@ -14,6 +14,8 @@ GET {{HostAddress}}/customer/114574/stats
 
 ###
 GET {{HostAddress}}/customer/114575/stats
+###
+GET {{HostAddress}}/customer/114582/stats
 
 ###
 GET {{HostAddress}}/customer/5/stats
